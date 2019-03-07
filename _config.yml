@@ -83,3 +83,5 @@ kramdown:
   math_engine: mathjax
   math_engine_opts:
     preview: true   # not default but better acessibility
+
+theme: jekyll-theme-slate
