@@ -1,4 +1,4 @@
-# Overview
+# Ready for Research
 
 This repository contains the source code for the Ready for Research workshop site:
   - https://mmiv-center.github.io/MMIV-Workshop-reproducible-science/
