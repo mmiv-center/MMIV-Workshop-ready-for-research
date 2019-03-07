@@ -13,7 +13,7 @@ repo: https://github.com/MMIV-CENTER/MMIV-Workshop-reproducible-science
 
 # Root URL below username.github.io domain, with leading slash but no trailing slash.
 # For example, for 'https://neurohackweek.github.io/lesson-example', use '/lesson-example'.
-root: "/MMIV-Workshop"
+root: "/MMIV-Workshop-reproducible-science"
 
 # Contact email address.
 email: HaukeBartsch@gmail.com
