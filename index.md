@@ -5,6 +5,7 @@ layout: lesson
 Currently we are soliciting votes for different workshop topics. Please suggest additional topics.
 
 - using git for teamwork and research
+- understanding the basics of DICOM
 - generalized additive mixed models in R (gamm4)
 - describing data using data ontologies and data dictionaries
 - open science and reproducible research
