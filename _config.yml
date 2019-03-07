@@ -9,7 +9,7 @@ kind: "workshop"
 title: "MMIV Ready for Research Workshop"
 
 # Repository URL (without trailing slash).
-repo: https://github.com/MMIV-CENTER/MMIV-Workshop-reproducible-science
+repo: https://github.com/MMIV-CENTER/MMIV-Workshop-ready-for-research
 
 # Root URL below username.github.io domain, with leading slash but no trailing slash.
 # For example, for 'https://neurohackweek.github.io/lesson-example', use '/lesson-example'.
@@ -47,7 +47,7 @@ nda_abcd_dd: "https://ndar.nih.gov/data_dictionary.html?source=ABCD%2BRelease%2B
 release10: "https://ndar.nih.gov/data_dictionary.html?source=ABCD%2BRelease%2B1.0&submission=ALL"
 release11: "https://ndar.nih.gov/data_dictionary.html?source=ABCD%2BRelease%2B1.1&submission=ALL"
 mmivsource: "https://github.com/MMIV-CENTER/"
-workshop: "https://mmiv-center.github.io/MMIV-Workshop-reproducible-science/"
+workshop: "https://mmiv-center.github.io/MMIV-Workshop-ready-for-research/"
 
 # Start time in minutes (780 is 1:00 pm - 60*13)
 start_time: 540
