@@ -6,17 +6,17 @@
 kind: "workshop"
 
 # Overall title for pages.
-title: "ABCD Baseline Data Workshop"
+title: "MMIV Best Practices Workshop"
 
 # Repository URL (without trailing slash).
-repo: https://github.com/ABCD-STUDY/ABCDWorkshop-reproducible-science
+repo: https://github.com/MMIV-CENTER/MMIV-Workshop-reproducible-science
 
 # Root URL below username.github.io domain, with leading slash but no trailing slash.
 # For example, for 'https://neurohackweek.github.io/lesson-example', use '/lesson-example'.
-root: "/ABCDWorkshop/module-repronim"
+root: "/MMIV-Workshop/module-repronim"
 
 # Contact email address.
-email: hbartsch@ucsd.edu
+email: HaukeBartsch@gmail.com
 
 #------------------------------------------------------------
 # Generic settings (should not need to change).
