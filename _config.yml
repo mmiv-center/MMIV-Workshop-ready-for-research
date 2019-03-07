@@ -6,7 +6,7 @@
 kind: "workshop"
 
 # Overall title for pages.
-title: "MMIV Best Practices Workshop"
+title: "MMIV Ready for Research Workshop"
 
 # Repository URL (without trailing slash).
 repo: https://github.com/MMIV-CENTER/MMIV-Workshop-reproducible-science
