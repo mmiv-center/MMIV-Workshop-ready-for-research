@@ -1,6 +1,19 @@
 ---
 layout: lesson
 ---
+
+Currently we are soliciting votes for different workshop topics. Please suggest additional topics.
+
+- using git for teamwork and research
+- generalized additive mixed models in R (gamm4)
+- describing data using data ontologies and data dictionaries
+- open science and reproducible research
+- packaging tools for sharing using docker
+- creating interactive info graphics for the web
+- multi-platform software development
+- advanced image processing and segmentation using Amira
+
+
 The MMIV Ready for Research Workshop will take place
 - on TBD
 - at the MMIV center
