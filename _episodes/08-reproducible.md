@@ -1,5 +1,5 @@
 ---
-title: "Reproducible Science and Hypothesis Testing"
+title: "Reproducible Science"
 author: "Hauke Bartsch"
 teaching: 30
 exercises: 0
