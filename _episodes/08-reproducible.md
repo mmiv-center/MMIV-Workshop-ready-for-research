@@ -1,7 +1,7 @@
 ---
 title: "Reproducible Science"
 author: "Hauke Bartsch"
-teaching: 30
+teaching: 90
 exercises: 0
 questions:
 - "What is reproducible science and why should I care?"
