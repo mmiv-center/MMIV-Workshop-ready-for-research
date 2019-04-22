@@ -25,7 +25,7 @@ keypoints:
 
 ## Access to the command shell
 
-For the duration of the workshop we are providing an interactive shell on a website: http://158.39.74.9. If you are running into problems please try to use a browser like Chrome. You will see a message "Your connection is not private". Please click on "Advanced" and "Proceed to 158.39.74.9". 
+For the duration of the workshop we are providing an interactive shell on a website: https://158.39.74.9. If you are running into problems please try to use a browser like Chrome. You might need to be logged into the vpn.uib.no (instructions are [here](https://it.uib.no/en/VPN,_Virtual_private_network#Which_VPN_service_should_I_use.3F)). Once you connect, you will see a message "Your connection is not private". Please click on "Advanced" and "Proceed to 158.39.74.9". 
 
 Select the "Terminal: SSH" icon in the center of the page, enter 158.39.74.9 for host and 22 for port, and enter one of the workshop user names (a01, a02, ... a20):
 ~~~
@@ -201,7 +201,7 @@ a03@mmiv-workshop:~/workshop/bin$ ls /data/ | cut -d'_' -f1 | sort | uniq | wc -
 7
 ~~~
 
-It is difficult to give a complete list of commands that are useful to know. Here is just the list of my favorites: `pwd, ls, cd, mkdir, cut, sort, uniq, wc, find, bc, tar, cat, rm, echo`.
+It is difficult to give a complete list of useful commands. Here is the list of my favorites: `pwd, ls, cd, mkdir, cut, sort, uniq, wc, find, bc, tar, cat, rm, echo`.
 
 ## Scripting a workflow
 
@@ -238,7 +238,184 @@ a03@mmiv-workshop:~/workshop/bin$ ./workshop01.sh
 204159.000000
 ~~~
 
-Change the script to show the DeviceSerialNumber tag for the DTI series.
+Change the script to show the StudyDate tag and you will see that the study dates (YYYYMMDD) have most likely been anonymized.
+
+### DICOM
+
+The tgz files in /data/ contain archives of DICOM files (.dcm). Each individual file is a single 2D image from a DICOM series. Images from the same series can be combined into a 3D volume with intensity values for each volume element (voxel) in space. The DICOM file header format contains the information required to combine the individual files into a volume. A tool that can read this information and produce a volume format (NIfTI) is 'dcm2niix'. We can use it to create volume files from the DICOM series.
+
+~~~
+# go to your users home directory
+cd
+# unpack one of the files
+tar xzvf /data/LIDC-IDRI-0195-data.tgz
+# enter the new directory
+cd LIDC-IDRI-0195
+# show the content
+ls
+'01-01-2000-CHEST PA  LATERAL-20064'  '01-01-2000-CT THORAX WCONTRAST-75001'
+# convert all files in the first folder
+dcm2niix 01-01-2000-CT\ THORAX\ WCONTRAST-75001/ .
+# show the created files
+ls ___20000101121409_3.*
+___20000101121409_3.json  ___20000101121409_3.nii
+~~~
+
+We can use a program from FSL to show the header information that carried over from DICOM to nii:
+~~~
+fsl5.0-fslinfo ___20000101121409_3.nii
+data_type      INT16
+dim1           512
+dim2           512
+dim3           133
+dim4           1
+datatype       4
+pixdim1        0.664062
+pixdim2        0.664062
+pixdim3        2.500000
+pixdim4        0.000000
+cal_max        0.0000
+cal_min        0.0000
+file_type      NIFTI-1+
+~~~
+
+If you compare the amount of information contained in the nii plus the information in the generated .json file (see section on JSON files below):
+~~~
+jq "." ___20000101121409_3.json
+{
+        "Modality": "CT",
+        "Manufacturer": "GE",
+        "ManufacturersModelName": "LightSpeed16",
+        "BodyPartExamined": "CHEST",
+        "PatientPosition": "FFS",
+        "SoftwareVersions": "06MW03.5",
+        "ScanOptions": "HELICAL_MODE",
+        "ImageType": ["ORIGINAL", "PRIMARY", "AXIAL"],
+        "SeriesNumber": 3,
+        "AcquisitionTime": "12:16:58.000000",
+        "AcquisitionNumber": 1,
+        "XRayExposure": 34,
+        "ReconMatrixPE": 512,
+        "ImageOrientationPatientDICOM": [
+                1,
+                0,
+                0,
+                0,
+                1,
+                0       ],
+        "ConversionSoftware": "dcm2niix",
+        "ConversionSoftwareVersion": "v1.0.20171215 (OpenJPEG build) GCC7.3.0"
+}
+~~~
+with the information that is in each DICOM:
+~~~
+dcmdump 01-01-2000-CHEST\ PA\ \ LATERAL-20064/57402-77830/000001.dcm
+
+# Dicom-File-Format
+
+# Dicom-Meta-Information-Header
+# Used TransferSyntax: Little Endian Explicit
+(0002,0000) UL 198                                      #   4, 1 FileMetaInformationGroupLength
+(0002,0001) OB 00\01                                    #   2, 1 FileMetaInformationVersion
+(0002,0002) UI =DigitalXRayImageStorageForPresentation  #  28, 1 MediaStorageSOPClassUID
+(0002,0003) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.828036732177643076376923109456] #  64, 1 MediaStorageSOPInstanceUID
+(0002,0010) UI =LittleEndianExplicit                    #  20, 1 TransferSyntaxUID
+(0002,0012) UI [1.2.40.0.13.1.1.1]                      #  18, 1 ImplementationClassUID
+(0002,0013) SH [dcm4che-1.4.35]                         #  14, 1 ImplementationVersionName
+
+# Dicom-Data-Set
+# Used TransferSyntax: Little Endian Explicit
+(0008,0005) CS [ISO_IR 100]                             #  10, 1 SpecificCharacterSet
+(0008,0008) CS [ORIGINAL\PRIMARY\]                      #  18, 3 ImageType
+(0008,0016) UI =DigitalXRayImageStorageForPresentation  #  28, 1 SOPClassUID
+(0008,0018) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.828036732177643076376923109456] #  64, 1 SOPInstanceUID
+(0008,0020) DA [20000101]                               #   8, 1 StudyDate
+(0008,0021) DA [20000101]                               #   8, 1 SeriesDate
+(0008,0022) DA [20000101]                               #   8, 1 AcquisitionDate
+(0008,0023) DA [20000101]                               #   8, 1 ContentDate
+(0008,0024) DA [20000101]                               #   8, 1 RETIRED_OverlayDate
+(0008,0025) DA [20000101]                               #   8, 1 RETIRED_CurveDate
+(0008,002a) DT [20000101]                               #   8, 1 AcquisitionDateTime
+(0008,0030) TM [124256.000000]                          #  14, 1 StudyTime
+(0008,0032) TM [124332.000000]                          #  14, 1 AcquisitionTime
+(0008,0050) SH [2819497684894126]                       #  16, 1 AccessionNumber
+(0008,0060) CS [DX]                                     #   2, 1 Modality
+(0008,0070) LO [GE MEDICAL SYSTEMS]                     #  18, 1 Manufacturer
+(0008,0090) PN (no value available)                     #   0, 0 ReferringPhysicianName
+(0008,1030) LO [CHEST, PA & LATERAL]                    #  20, 1 StudyDescription
+(0008,1090) LO [Revolution XQi ADS_28.4]                #  24, 1 ManufacturerModelName
+(0008,1155) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.416041692526425247272805182345] #  64, 1 ReferencedSOPInstanceUID
+(0008,2218) SQ (Sequence with undefined length #=1)     # u/l, 1 AnatomicRegionSequence
+  (fffe,e000) na (Item with undefined length #=3)         # u/l, 1 Item
+    (0008,0100) SH [T-D3000]                                #   8, 1 CodeValue
+    (0008,0102) SH [SRT]                                    #   4, 1 CodingSchemeDesignator
+    (0008,0104) LO [Chest]                                  #   6, 1 CodeMeaning
+  (fffe,e00d) na (ItemDelimitationItem)                   #   0, 0 ItemDelimitationItem
+(fffe,e0dd) na (SequenceDelimitationItem)               #   0, 0 SequenceDelimitationItem
+(0010,0010) PN (no value available)                     #   0, 0 PatientName
+(0010,0020) LO [LIDC-IDRI-0195]                         #  14, 1 PatientID
+(0010,0030) DA (no value available)                     #   0, 0 PatientBirthDate
+(0010,0040) CS (no value available)                     #   0, 0 PatientSex
+(0010,21d0) DA [20000101]                               #   8, 1 LastMenstrualDate
+(0012,0062) CS [YES]                                    #   4, 1 PatientIdentityRemoved
+(0012,0063) LO [DCM:113100/113105/113107/113108/113109/113111] #  46, 1 DeidentificationMethod
+(0013,0010) LO [CTP]                                    #   4, 1 PrivateCreator
+(0013,1010) LO [LIDC-IDRI]                              #  10, 1 Unknown Tag & Data
+(0013,1013) LO [62796001]                               #   8, 1 Unknown Tag & Data
+(0018,0015) CS [CHEST]                                  #   6, 1 BodyPartExamined
+(0018,0060) DS [125]                                    #   4, 1 KVP
+(0018,1020) LO [Ads Application Package VERSION ADS_28.4] #  40, 1 SoftwareVersions
+(0018,1110) DS [1800]                                   #   4, 1 DistanceSourceToDetector
+(0018,1111) DS [1750]                                   #   4, 1 DistanceSourceToPatient
+(0018,1150) IS [2]                                      #   2, 1 ExposureTime
+(0018,1151) IS [320]                                    #   4, 1 XRayTubeCurrent
+(0018,1152) IS [1]                                      #   2, 1 Exposure
+(0018,1153) IS [1370]                                   #   4, 1 ExposureInuAs
+(0018,1160) SH [NONE]                                   #   4, 1 FilterType
+(0018,1190) DS [1.25]                                   #   4, 1 FocalSpots
+(0020,000d) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.236006898433660288243738720064] #  64, 1 StudyInstanceUID
+(0020,000e) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.211317669233467214881380477830] #  64, 1 SeriesInstanceUID
+(0020,0010) SH (no value available)                     #   0, 0 StudyID
+(0020,0011) IS [57402]                                  #   6, 1 SeriesNumber
+(0020,0012) IS (no value available)                     #   0, 0 AcquisitionNumber
+(0020,0013) IS [1]                                      #   2, 1 InstanceNumber
+(0020,0020) CS [L\F]                                    #   4, 2 PatientOrientation
+(0020,0052) UI [1.3.6.1.4.1.14519.5.2.1.6279.6001.179900922880500052480418403001] #  64, 1 FrameOfReferenceUID
+(0028,0002) US 1                                        #   2, 1 SamplesPerPixel
+(0028,0004) CS [MONOCHROME2]                            #  12, 1 PhotometricInterpretation
+(0028,0010) US 2022                                     #   2, 1 Rows
+(0028,0011) US 1736                                     #   2, 1 Columns
+(0028,0100) US 16                                       #   2, 1 BitsAllocated
+(0028,0101) US 14                                       #   2, 1 BitsStored
+(0028,0102) US 13                                       #   2, 1 HighBit
+(0028,0103) US 0                                        #   2, 1 PixelRepresentation
+(0028,0300) CS [NO]                                     #   2, 1 QualityControlImage
+(0028,0301) CS [NO]                                     #   2, 1 BurnedInAnnotation
+(0028,0303) CS [MODIFIED]                               #   8, 1 LongitudinalTemporalInformationModified
+(0028,1040) CS [LOG]                                    #   4, 1 PixelIntensityRelationship
+(0028,1041) SS -1                                       #   2, 1 PixelIntensityRelationshipSign
+(0028,1050) DS [8000]                                   #   4, 1 WindowCenter
+(0028,1051) DS [15000]                                  #   6, 1 WindowWidth
+(0028,1052) DS [0]                                      #   2, 1 RescaleIntercept
+(0028,1053) DS [1]                                      #   2, 1 RescaleSlope
+(0028,1054) LO [US]                                     #   2, 1 RescaleType
+(0028,1055) LO [NORMAL\HARDER\SOFTER]                   #  20, 3 WindowCenterWidthExplanation
+(0028,2110) CS [00]                                     #   2, 1 LossyImageCompression
+(0038,0020) DA [20000101]                               #   8, 1 AdmittingDate
+(0040,0002) DA [20000101]                               #   8, 1 ScheduledProcedureStepStartDate
+(0040,0004) DA [20000101]                               #   8, 1 ScheduledProcedureStepEndDate
+(0040,0244) DA [20000101]                               #   8, 1 PerformedProcedureStepStartDate
+(0040,2016) LO (no value available)                     #   0, 0 PlacerOrderNumberImagingServiceRequest
+(0040,2017) LO (no value available)                     #   0, 0 FillerOrderNumberImagingServiceRequest
+(0040,a075) PN [Removed by CTP]                         #  14, 1 VerifyingObserverName
+(0040,a123) PN [Removed by CTP]                         #  14, 1 PersonName
+(0070,0084) PN (no value available)                     #   0, 0 ContentCreatorName
+(7fe0,0010) OW 0000\01b0\0191\0180\0134\013c\011c\0113\00ba\00c9\00b0\00c5\00ac... # 7020384, 1 PixelData
+~~~
+
+It is apparent that some information related to the interpretation of the image data got lost in the translation. We therefore consider nifti a derived format. The two formats are not equivalent and raw data should be archived as DICOM.
+
+As an exercise try to print all DICOM tags of all files. Sort all the tags and show only the unique lines. This information can be used to judge the quality of the anoymization procedure used before DICOM files can be shared.
 
 ## Regular expressions
 
@@ -423,8 +600,6 @@ As a more complex example we can extract all "E" and "MET" values for entries th
 jq -r '.[]|select(.Q=="-1")|[.E,.MET]|@csv' /data/Wmunu.json
 ~~~
 
-
-## First steps in Matlab
 
 
 
