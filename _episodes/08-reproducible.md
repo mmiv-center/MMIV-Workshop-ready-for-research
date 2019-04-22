@@ -597,11 +597,16 @@ jq -r ".[].E" /data/Wmunu.json | head
 
 As a more complex example we can extract all "E" and "MET" values for entries that have a "Q" value of "-1" as a comma-separated list:
 ~~~
-jq -r '.[]|select(.Q=="-1")|[.E,.MET]|@csv' /data/Wmunu.json
+jq -r '.[]|select(.Q=="-1")|[.E,.MET]|@csv' /data/Wmunu.json | head
+"40.5233280769","33.0916"
+"141.891930672","32.2362"
+"88.0808773377","35.9342"
+"42.1504926279","42.903"
+"36.0527958217","45.3356"
+"33.241519567","31.6435"
+"97.7798857214","34.6896"
+"91.8226900396","28.7345"
+"34.9156616111","33.1688"
+"77.016284231","28.3057"
 ~~~
-
-
-
-
-
 
