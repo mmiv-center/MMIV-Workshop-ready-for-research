@@ -184,7 +184,7 @@ LIDC-IDRI-0193-data.tgz
 ~~~
 Combining commands in this way is an effective way to process large numbers of files consistently. Here is a chain of commands that lists all the participant IDs in the /data directory
 ~~~
-a03@mmiv-workshop:~/workshop/bin$ ls /data/ | cut -d'_' -f1 | sort | uniq
+a03@mmiv-workshop:~/workshop/bin$ ls /data/*.tgz | cut -d'-' -f3 | sort | uniq
 LIDC-IDRI-0193-data.tgz
 LIDC-IDRI-0194-data.tgz
 LIDC-IDRI-0195-data.tgz
@@ -213,7 +213,7 @@ find /data/* -name "*019*.tgz" -print0 | while IFS= read -r -d $'\0' line; do
     echo $line
 done
 ~~~
-Run this script using its name `./workshop01.sh` and we should get a list of all the files that contain T1 weighted image series. Instead of `echo $line` (prints out the current filename) we can now use the `tar` command to extract a single DICOM file from this archive. All the DICOM files contain information about the whole image series so we can extract for example the DeviceSerialNumber tag from that DICOM file and remove the file afterwards again to keep our directory clean:
+Run this script using its name `./workshop01.sh` and we should get a list of all the image series. Instead of `echo $line` (prints out the current filename) we can now use the `tar` command to extract a single DICOM file from each archive. All the DICOM files contain information about the whole image series so we can extract for example the StudyTime tag from that DICOM file and remove the file afterwards again to keep our directory clean:
 ~~~
 #!/usr/bin/env bash
 
@@ -226,7 +226,7 @@ done
 The `dcmdump` command is provided by the dcmtk tools (see dicom.office.de).
 
 
-Running this script should produce the following list of (anonymized) scanner device serial numbers from each T1 series:
+Running this script should produce the following list of StudyTime entries from each series (HHMMSS.MSEC):
 ~~~
 a03@mmiv-workshop:~/workshop/bin$ ./workshop01.sh
 143907.000000
@@ -307,7 +307,7 @@ jq "." ___20000101121409_3.json
         "ConversionSoftwareVersion": "v1.0.20171215 (OpenJPEG build) GCC7.3.0"
 }
 ~~~
-with the information that is in each DICOM:
+with the information contained in each DICOM:
 ~~~
 dcmdump 01-01-2000-CHEST\ PA\ \ LATERAL-20064/57402-77830/000001.dcm
 
@@ -413,7 +413,7 @@ dcmdump 01-01-2000-CHEST\ PA\ \ LATERAL-20064/57402-77830/000001.dcm
 (7fe0,0010) OW 0000\01b0\0191\0180\0134\013c\011c\0113\00ba\00c9\00b0\00c5\00ac... # 7020384, 1 PixelData
 ~~~
 
-It is apparent that some information related to the interpretation of the image data got lost in the translation. We therefore consider nifti a derived format. The two formats are not equivalent and raw data should be archived as DICOM.
+It is apparent that some information related to the interpretation of the image data got lost in the translation. We therefore consider NIfTI a derivative format. The two data representations are not equivalent and raw data should be archived as DICOM.
 
 As an exercise try to print all DICOM tags of all files. Sort all the tags and show only the unique lines. This information can be used to judge the quality of the anoymization procedure used before DICOM files can be shared.
 
@@ -421,7 +421,7 @@ As an exercise try to print all DICOM tags of all files. Sort all the tags and s
 
 You have already seen search strings like "*00001.dcm". The star-character is used to indicate 'anything before'. This wild-card search is convenient enough that there is a more advanced version called 'regular expressions'. They are a standard feature in most programming languages (matlab, python). On the command line we can use the 'grep' command to search using regular expressions.
 
-The '/data/city.csv' file is an example data file downloaded from the radiohead house of cards (https://github.com/dataarts/radiohead) page. The file is quite large for a csv (comma-separated values) file. Use 'head' to look at the beginning of the file:
+The '/data/city.csv' file is an example data file downloaded from the radiohead house of cards (https://github.com/dataarts/radiohead) page. The file is quite large for a csv- (comma-separated values) file. Use 'head' to look at the beginning of the file:
 ~~~
 head /data/city.csv
 -4192,222555,-3554,47
@@ -436,7 +436,7 @@ head /data/city.csv
 -3713,222607,-3432,30
 ~~~
 
-Opening this file in Excel you will likely get an error message - not all the lines could be loaded.
+Opening this file in Excel you will likely get an error message - not all the lines could be loaded. If you try to list the content of the file (cat) without using 'head' your terminal will become unresponsive. In that case use the 'close' cross-icon in the upper right hand corner and login again to a new session using the same user name. 
 
 Arbitrarily lets look at a subset of the lines. All the lines that end with '50'. Because there might be a lot of those lets filter the output of grep with 'head' to only the first couple of lines. This filtering is done by using the pipe (|)-character.
 ~~~
