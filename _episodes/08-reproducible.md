@@ -254,14 +254,14 @@ cd LIDC-IDRI-0195
 # show the content
 ls
 '01-01-2000-CHEST PA  LATERAL-20064'  '01-01-2000-CT THORAX WCONTRAST-75001'
-# convert all files in the first folder
+# convert all files in the second folder and copy results into the current (.) directory
 dcm2niix 01-01-2000-CT\ THORAX\ WCONTRAST-75001/ .
-# show the created files
+# show the created files (one json header file and one nii data file)
 ls ___20000101121409_3.*
 ___20000101121409_3.json  ___20000101121409_3.nii
 ~~~
 
-We can use a program from FSL to show the header information that carried over from DICOM to nii:
+We can use a program from [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki) to show the header information that carried over from DICOM to nii:
 ~~~
 fsl5.0-fslinfo ___20000101121409_3.nii
 data_type      INT16
