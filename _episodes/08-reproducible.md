@@ -110,7 +110,7 @@ a03@mmiv-workshop:~$ tree
 3 directories, 0 files
 ~~~
 
-There are many more commands availble. You should get help for each one of them if you use the command `man` - _manual page` followed by the command you want to know more about. Find out what the command `banner` is doing from the help page and use it on your screen.
+There are many more commands availble. You should get help for each one of them if you use the command `man` - manual page followed by the command you want to know more about. Find out what the command `banner` is doing from the help page and use it on your screen.
 
 Find out about the `nudoku` command.
 
