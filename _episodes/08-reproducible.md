@@ -505,7 +505,9 @@ Keep track of your changes using a version control system. Instead of adding dat
 
 We can use our `workshop` directory to start keeping track of our changes using git. Start by creating an empty git repository in that directory:
 ~~~
-a03@mmiv-workshop:~/workshop/bin$ cd ~/workshop
+a03@mmiv-workshop:~$ mkdir -p workshop/bin
+a03@mmiv-workshop:~$ echo '#!/usr/bin/env bash' > workshop/bin/workshop01.sh
+a03@mmiv-workshop:~$ cd ~/workshop
 a03@mmiv-workshop:~/workshop$ git init
 Initialized empty Git repository in /home/a03/workshop/.git/
 ~~~
@@ -546,6 +548,35 @@ a03@mmiv-workshop:~/workshop$ ls
 a03@mmiv-workshop:~/workshop$ git checkout workshop.sh
 a03@mmiv-workshop:~/workshop$ ls
 ~~~
+
+### Where does git store information?
+
+Git is perfectly happy to store information in your current directory. It created a '.git' directory when you run 'git init'. Inside this directory git stores all the changes and the files you added in any of the sub-directories. If you remove the .git directory you will loose your history. This local 'git repository' should be backed-up, some free resources to backup your code are gitlab and github.
+
+Once you change your files you will end up with two or three different versions of your files. One in the directory you are working in (checked out version). One in the .git directory (checked in version) and potentially another version on a public repository in the cloud. You need to move your changes between these two/three locations by creating commits.
+
+This complexity allows git to be used in large projects with many programmers working on the same software.
+
+
+### What is a good commit?
+
+The unit of change added to version control in a single step is called a commit. Commits can happen frequently, usually they contain changes related to fixing a bug, or an incremental step implementing a new function. At a later point one would want to look at the commit history and see changes that relate to some event - like fixing a bug or improving the documentation.
+
+Change the workshop.sh file and add a comment (lines starting with #). Save the file and add the new version of the script to git again:
+~~~
+a03@mmiv-workshop:~/workshop$ git add bin/workshop.sh
+~~~
+After you add the changes for all files you can create your commit again with:
+~~~
+a03@mmiv-workshop:~/workshop$ git commit -m "add documentation"
+~~~
+
+The command 'git status' will show you all files that have been chaned relative to the checked in version of your project.
+
+### Merge magic
+
+Once several programmers work on the same software changes to the same file can be submitted one after another. In this case the local repository of programmer A might not contain the latest changes of programmer B. User A can nevertheless continue to work offline using his/her own copy. At some point both A and B will first commit their changes and push them to the shared repository. In order to resolve the changes of both to the same file git will attempt to 'merge' the changes. Some changes to the documentation at the beginning of the file can easily be merged with changes that fix a bug at the end of the file. 
+
 
 Learn more about `git` (`git log`, `git blame`, `git tag`, `git branch`) and how you can check-out a specific version of the files stored in your local git repository.
 
