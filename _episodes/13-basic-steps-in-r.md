@@ -1,5 +1,5 @@
 ---
-title: "Reproducible Science"
+title: "Merge spreadsheets"
 author: "Hauke Bartsch"
 teaching: 15
 exercises: 0
@@ -19,7 +19,7 @@ keypoints:
 >  - Know how to create a table 1?
 {: .challenge}
 
-# Module 1: Reproducible Science
+# Module 1: Table data
 
 ## Merge two data dictionaries
 
@@ -51,17 +51,18 @@ head(d1)
 5      P004        P004 2012-10-26       2507.1122     78808.67
 6      P005        P005 2012-07-21       2278.5445     48285.86
 head(d2)
-         ID        Name  StudyDate intra_cranial_volume Vol_Amygdala_l
-1      P000        P000 2019-01-01            119600.00         500.00
-2      P001        P001 2016-11-21             26625.39       25884.15
-3      P002        P002 2014-02-14             14933.85       41513.37
-4      P003        P003 2002-06-15             86720.78       32666.68
-5      P004        P004 2012-10-26             57663.58       39404.34
-6      P005        P005 2012-07-21             52406.52       24142.93
+    ID Name  StudyDate intra_cranial_volume Vol_Amygdala_l
+1 P011 P011 2016-08-22             19109.89     21409.8035
+2 P280 P280 2015-03-28             21568.30     31760.0508
+3 P017 P017 2004-05-19             83853.09     12465.6334
+4 P378 P378 2002-05-06             95432.79     20849.4494
+5 P226 P226 2011-05-16             75882.31      3651.7541
+6 P273 P273 2011-06-24             99913.11       805.9987
 ~~~
 
 ### Merge the two spreadsheets
 
+In order to merge the spreadsheets we need to identify one or more columns that can be used to match the data from table d1 to table d2.
 ~~~
 dall = merge(d1, d2, by.x=c("PatientID", "PatientName", "StudyDate"), by.y=c("ID", "Name", "StudyDate"), all.x=T, all.y=T)
 ~~~
@@ -70,4 +71,19 @@ dall = merge(d1, d2, by.x=c("PatientID", "PatientName", "StudyDate"), by.y=c("ID
 
 ~~~
 write.csv(dall, file="dall.csv", row.names=F)
+~~~
+
+
+## Table 1
+
+One of the first steps in a project is to describe your raw data. In R we can use the 'tableone' package.
+
+~~~
+install.packages('tableone')
+install.packages('stargazer')
+library('tableone')
+library('stargazer')
+varList = c("Vol_Hippocampus", "Vol_Amygdala", "intra_cranial_volume", "Vol_Amygdala_l", "Sex")
+table1 = CreateTableOne(vars = varList, data = dall)
+stargazer(print(table1))
 ~~~
