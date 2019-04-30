@@ -1,4 +1,4 @@
-"PatientID","PatientName","StudyDate","intra_cranial_volume","Vol_Amygdala_l"
+"ID","Name","StudyDate","intra_cranial_volume","Vol_Amygdala_l"
 "P000","P000",2019-01-01,119600,500
 "P001","P001",2016-11-21,26625.3910865635,25884.1465460137
 "P002","P002",2014-02-14,14933.8517489377,41513.3704198524
