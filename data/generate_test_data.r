@@ -16,5 +16,5 @@ d2$Vol_Amygdala = NULL
 # remove some rows
 d2 = d2[-seq(100,200),]
 
-write.csv(d1, 'd1.csv')
-write.csv(d2, 'd2.csv')
+write.csv(d1, 'd1.csv',row.names=F)
+write.csv(d2, 'd2.csv',row.names=F)
