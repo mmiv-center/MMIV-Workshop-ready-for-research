@@ -577,6 +577,22 @@ The command 'git status' will show you all files that have been chaned relative 
 
 Once several programmers work on the same software changes to the same file can be submitted one after another. In this case the local repository of programmer A might not contain the latest changes of programmer B. User A can nevertheless continue to work offline using his/her own copy. At some point both A and B will first commit their changes and push them to the shared repository. In order to resolve the changes of both to the same file git will attempt to 'merge' the changes. Some changes to the documentation at the beginning of the file can easily be merged with changes that fix a bug at the end of the file. 
 
+In case changes by different authors overlap git will ask the user to 'merge' the changes manually. Open the file and remove the duplicates indicated. That changed file needs to be added and commited again to finish the merge.
+
+In order to test this functionality lets get a copy of a repository:
+~~~
+git clone https://github.com/mmiv-center/project01.git
+cd project01
+ls
+~~~
+
+Open the README and leave a message. After you save the file add it, commit and push back to the repository for everyone to see:
+~~~
+git add README.md
+git commit -m "my message"
+git push
+~~~
+
 
 Learn more about `git` (`git log`, `git blame`, `git tag`, `git branch`) and how you can check-out a specific version of the files stored in your local git repository.
 
