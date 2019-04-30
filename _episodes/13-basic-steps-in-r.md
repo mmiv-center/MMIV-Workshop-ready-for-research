@@ -34,3 +34,40 @@ cp rfr/data/d2.csv .
 \rm -R rfr
 ~~~
 
+After these steps the current directory should contain two spreadsheet files that we want to read into R, merge and export again as a new spreadsheet.
+
+### Read spreadsheet
+
+Start R - or RStudio in the directory that contains the two spreadsheets d1.csv and d2.csv.
+~~~
+d1 = read.csv('d1.csv')
+d2 = read.csv('d2.csv')
+head(d1)
+  PatientID PatientName  StudyDate Vol_Hippocampus Vol_Amygdala
+1      P000        P000 2019-01-01       5200.0000      1000.00
+2      P001        P001 2016-11-21       1157.6257     51768.29
+3      P002        P002 2014-02-14        649.2979     83026.74
+4      P003        P003 2002-06-15       3770.4686     65333.37
+5      P004        P004 2012-10-26       2507.1122     78808.67
+6      P005        P005 2012-07-21       2278.5445     48285.86
+head(d2)
+         ID        Name  StudyDate intra_cranial_volume Vol_Amygdala_l
+1      P000        P000 2019-01-01            119600.00         500.00
+2      P001        P001 2016-11-21             26625.39       25884.15
+3      P002        P002 2014-02-14             14933.85       41513.37
+4      P003        P003 2002-06-15             86720.78       32666.68
+5      P004        P004 2012-10-26             57663.58       39404.34
+6      P005        P005 2012-07-21             52406.52       24142.93
+~~~
+
+### Merge the two spreadsheets
+
+~~~
+dall = merge(d1, d2, by.x=c("PatientID", "PatientName", "StudyDate"), by.y=c("ID", "Name", "StudyDate"), all.x=T, all.y=T)
+~~~
+
+### Save the result again
+
+~~~
+write.csv(dall, file="dall.csv", row.names=F)
+~~~
